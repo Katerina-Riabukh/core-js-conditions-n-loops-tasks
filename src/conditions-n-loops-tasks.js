@@ -21,8 +21,11 @@
  *  0  => true
  *  -5 => false
  */
-function isPositive(/* number */) {
-  throw new Error('Not implemented');
+function isPositive(number) {
+  if (number < 0) {
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -38,8 +41,9 @@ function isPositive(/* number */) {
  *  -5, 0, 5      => 5
  *  -0.1, 0, 0.2  => 0.2
  */
-function getMaxNumber(/* a, b, c */) {
-  throw new Error('Not implemented');
+function getMaxNumber(a, b, c) {
+  const x = a > b ? a : b;
+  return x > c ? x : c;
 }
 
 /**
@@ -59,9 +63,24 @@ function getMaxNumber(/* a, b, c */) {
  * {x: 2, y: 1}, {x: 2, y: 8} => true
  * {x: 1, y: 1}, {x: 2, y: 8} => false
  * {x: 1, y: 1}, {x: 2, y: 8} => false
+ * 
+ * 
+ * Vertical or Horizontal Check:
+
+ * queen.x === king.x: This checks if they are on the same column.
+ * queen.y === king.y: This checks if they are on the same row.
+ * Diagonal Check:
+ * 
+ * Math.abs(queen.x - king.x) === Math.abs(queen.y - king.y): This checks if they are on the same diagonal.
+ * Result:
+ * 
+ * If either condition is true, the queen can capture the king, so we return true. Otherwise, return false.
  */
-function canQueenCaptureKing(/* queen, king */) {
-  throw new Error('Not implemented');
+function canQueenCaptureKing(queen, king) {
+  const isVerticalOrHorizontal = queen.x === king.x || queen.y === king.y;
+  const isDiagonal = Math.abs(queen.x - king.x) === Math.abs(queen.y - king.y);
+
+  return isVerticalOrHorizontal || isDiagonal;
 }
 
 /**
@@ -82,8 +101,13 @@ function canQueenCaptureKing(/* queen, king */) {
  *  2, 2, 5   => false
  *  3, 0, 3   => false
  */
-function isIsoscelesTriangle(/* a, b, c */) {
-  throw new Error('Not implemented');
+function isIsoscelesTriangle(a, b, c) {
+  const isValidTriangle =
+    a > 0 && b > 0 && c > 0 && a + b > c && a + c > b && b + c > a;
+
+  const hasEqualSides = a === b || b === c || a === c;
+
+  return isValidTriangle && hasEqualSides;
 }
 
 /**
@@ -99,9 +123,35 @@ function isIsoscelesTriangle(/* a, b, c */) {
  *  5   => V
  *  10  => X
  *  26  => XXVI
+ *
+ * Mapping:
+ * Define Roman numeral symbols (X, IX, V, IV, I) and their values (10, 9, 5, 4, 1).
+ * Iterate through the mapping:
+ * Check if the current number (currentNum) is greater than or equal to the Roman numeral's value.
+ * If so, append the numeral to the result string and subtract its value from currentNum.
+ * Return the result:
+ * Once all the numeral values have been processed, result contains the Roman numeral representation.
  */
-function convertToRomanNumerals(/* num */) {
-  throw new Error('Not implemented');
+function convertToRomanNumerals(num) {
+  const romanNumerals = [
+    { value: 10, numeral: 'X' },
+    { value: 9, numeral: 'IX' },
+    { value: 5, numeral: 'V' },
+    { value: 4, numeral: 'IV' },
+    { value: 1, numeral: 'I' },
+  ];
+
+  let result = '';
+  let currentNum = num;
+
+  for (let i = 0; i < romanNumerals.length; i += 1) {
+    while (currentNum >= romanNumerals[i].value) {
+      result += romanNumerals[i].numeral;
+      currentNum -= romanNumerals[i].value;
+    }
+  }
+
+  return result;
 }
 
 /**
@@ -119,8 +169,56 @@ function convertToRomanNumerals(/* num */) {
  *  '10,5'    => 'one zero point five'
  *  '1950.2'  => 'one nine five zero point two'
  */
-function convertNumberToString(/* numberStr */) {
-  throw new Error('Not implemented');
+function convertNumberToString(numberStr) {
+  let result = '';
+
+  for (let i = 0; i < numberStr.length; i += 1) {
+    const char = numberStr[i];
+
+    switch (char) {
+      case '0':
+        result += result ? ' zero' : 'zero';
+        break;
+      case '1':
+        result += result ? ' one' : 'one';
+        break;
+      case '2':
+        result += result ? ' two' : 'two';
+        break;
+      case '3':
+        result += result ? ' three' : 'three';
+        break;
+      case '4':
+        result += result ? ' four' : 'four';
+        break;
+      case '5':
+        result += result ? ' five' : 'five';
+        break;
+      case '6':
+        result += result ? ' six' : 'six';
+        break;
+      case '7':
+        result += result ? ' seven' : 'seven';
+        break;
+      case '8':
+        result += result ? ' eight' : 'eight';
+        break;
+      case '9':
+        result += result ? ' nine' : 'nine';
+        break;
+      case '-':
+        result += result ? ' minus' : 'minus';
+        break;
+      case '.':
+      case ',':
+        result += result ? ' point' : 'point';
+        break;
+      default:
+        throw new Error('Invalid character in input');
+    }
+  }
+
+  return result;
 }
 
 /**
@@ -134,9 +232,36 @@ function convertNumberToString(/* numberStr */) {
  *  'abcba'     => true
  *  '0123210'   => true
  *  'qweqwe'    => false
+ * 
+ * Pointers Approach:
+
+ * Use two pointers:
+ * left starts at the beginning of the string.
+ * right starts at the end of the string.
+ * Compare the characters at these positions.
+ * Match Check:
+ * 
+ * If str[left] is not equal to str[right], return false immediately because the string is not a palindrome.
+ * Increment and Decrement Pointers:
+ * 
+ * After checking, increment left and decrement right to move towards the middle.
+ * Complete the Loop:
+ * 
+ * If the pointers cross each other (left >= right) without finding a mismatch, the string is a palindrome.
  */
-function isPalindrome(/* str */) {
-  throw new Error('Not implemented');
+function isPalindrome(str) {
+  let left = 0;
+  let right = str.length - 1;
+
+  while (left < right) {
+    if (str[left] !== str[right]) {
+      return false;
+    }
+    left += 1;
+    right -= 1;
+  }
+
+  return true;
 }
 
 /**
@@ -153,8 +278,11 @@ function isPalindrome(/* str */) {
  *  'qwerty', 'Q'     => -1
  *  'qwerty', 'p'     => -1
  */
-function getIndexOf(/* str, letter */) {
-  throw new Error('Not implemented');
+function getIndexOf(str, letter) {
+  for (let i = 0; i < str.length; i += 1) {
+    if (str[i] === letter) return i;
+  }
+  return -1;
 }
 
 /**
@@ -171,10 +299,28 @@ function getIndexOf(/* str, letter */) {
  *  123450, 0   => true
  *  12345, 0    => false
  *  12345, 6    => false
+ * 
+ * Base Case:
+
+ * If num is a single-digit number (num < 10), directly compare it to digit.
+ * Check the Last Digit:
+ * 
+ * Use num % 10 to extract the last digit and compare it with digit.
+ * Recursive Step:
+ * 
+ * Remove the last digit by (num - num % 10) / 10 and call the function again.
+ * Repeat Until the Base Case is Reached:
+ * 
+ * The recursion continues until there is only one digit left in the number.
  */
-function isContainNumber(/* num, digit */) {
-  throw new Error('Not implemented');
+function isContainNumber(num, digit) {
+  if (num < 10) return num === digit;
+
+  if (num % 10 === digit) return true;
+
+  return isContainNumber((num - (num % 10)) / 10, digit);
 }
+isContainNumber(123450, 5);
 
 /**
  * Finds the index of an element in an array where the sum of elements to the left equals the sum of elements to the right.
@@ -188,9 +334,34 @@ function isContainNumber(/* num, digit */) {
  *  [1, 2, 5, 3, 0] => 2    => 1 + 2 === 3 + 0 then balance element is 5 and its index = 2
  *  [2, 3, 9, 5] => 2       => 2 + 3 === 5 then balance element is 9 and its index = 2
  *  [1, 2, 3, 4, 5] => -1   => no balance element
+ *
+ * Initial Edge Case Check: If the array is empty, it directly returns -1.
+ * Total Sum Calculation: We calculate the total sum of the array before starting to iterate.
+ * Left and Right Sums Calculation: At each index i, the left sum is the sum of all elements before the index, and the right sum is the total sum minus the left sum and the current element arr[i].
+ * Balance Check: If at any index, the left sum equals the right sum, that index is returned.
+ * Final Check: If no such balance point is found after the loop, it returns -1.
  */
-function getBalanceIndex(/* arr */) {
-  throw new Error('Not implemented');
+function getBalanceIndex(arr) {
+  if (arr.length === 0) return -1;
+
+  let totalSum = 0;
+  for (let i = 0; i < arr.length; i += 1) {
+    totalSum += arr[i];
+  }
+
+  let leftSum = 0;
+
+  for (let i = 0; i < arr.length; i += 1) {
+    const rightSum = totalSum - leftSum - arr[i];
+
+    if (leftSum === rightSum) {
+      return i;
+    }
+
+    leftSum += arr[i];
+  }
+
+  return -1;
 }
 
 /**
